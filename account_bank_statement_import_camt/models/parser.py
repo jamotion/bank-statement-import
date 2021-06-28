@@ -98,10 +98,14 @@ class CamtParser(models.AbstractModel):
         # eref
         self.add_value_from_node(
             node, [
-                './ns:RmtInf/ns:Strd/ns:CdtrRefInf/ns:Ref',
                 './ns:Refs/ns:EndToEndId',
             ],
             transaction, 'eref')
+        self.add_value_from_node(
+            node, [
+                './ns:RmtInf/ns:Strd/ns:CdtrRefInf/ns:Ref',
+            ],
+            transaction, 'name')
         amount = self.parse_amount(node)
         if amount != 0.0:
             transaction['amount'] = amount
@@ -147,6 +151,7 @@ class CamtParser(models.AbstractModel):
                     './ns:NtryDtls/ns:Btch/ns:PmtInfId',
                 ],
                 transaction, 'eref')
+
         if not transaction.message:
             self.add_value_from_node(
                 node, './ns:AddtlNtryInf', transaction, 'message')
