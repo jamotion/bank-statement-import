@@ -164,9 +164,8 @@ class CamtParser(models.AbstractModel):
             node, './ns:BookgDt/ns:Dt', transaction, 'date')
         self.add_value_from_node(
             node, './ns:BookgDt/ns:Dt', transaction, 'execution_date')
-        # JAMO: We do not use value_date because this is shit!
-        # self.add_value_from_node(
-        #     node, './ns:ValDt/ns:Dt', transaction, 'value_date')
+        self.add_value_from_node(
+            node, './ns:BookgDt/ns:Dt', transaction, 'value_date')
         transaction.transferred_amount = self.parse_amount(node)
         # JAMO: we use message instead of name
         self.add_value_from_node(
