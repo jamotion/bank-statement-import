@@ -93,8 +93,7 @@ class CamtParser(models.AbstractModel):
             ],
             transaction,
             'message',
-            join_str='\n',
-            default=_('No description'))
+            join_str='\n')
         # eref
         self.add_value_from_node(
             node, [
@@ -167,7 +166,8 @@ class CamtParser(models.AbstractModel):
         self.add_value_from_node(
             node, './ns:BookgDt/ns:Dt', transaction, 'value_date')
         transaction.transferred_amount = self.parse_amount(node)
-        # JAMO: we use message instead of name
+        self.add_value_from_node(
+            node, './ns:AddtlNtryInf', transaction, 'name')
         self.add_value_from_node(
             node, './ns:AddtlNtryInf', transaction, 'message')
         detail_nodes = self.xpath(node, './ns:NtryDtls/ns:TxDtls')
