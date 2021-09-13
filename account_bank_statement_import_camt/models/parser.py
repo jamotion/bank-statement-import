@@ -50,6 +50,8 @@ class CamtParser(models.AbstractModel):
             sign = -1
         amount_node = self.xpath(node, './ns:AmtDtls/ns:TxAmt/ns:Amt')
         if not amount_node:
+            amount_node = self.xpath(node, './ns:Amt')
+        if not amount_node:
             amount_node = self.xpath(node, '../../ns:Amt')
             if not amount_node:
                 amount_node = self.xpath(node, 'ns:Amt')
@@ -285,7 +287,7 @@ class CamtParser(models.AbstractModel):
         # Check wether version 052 or 053:
         re_camt_version = re.compile(
             r'(^urn:iso:std:iso:20022:tech:xsd:camt.054.'
-            r'(^urn:iso:std:iso:20022:tech:xsd:camt.053.'
+            r'|^urn:iso:std:iso:20022:tech:xsd:camt.053.'
             r'|^urn:iso:std:iso:20022:tech:xsd:camt.052.'
             r'|^ISO:camt.054.'
             r'|^ISO:camt.053.'
