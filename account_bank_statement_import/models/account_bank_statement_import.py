@@ -396,6 +396,8 @@ class AccountBankStatementImport(models.TransientModel):
             )
             if not unique_id or not bool(bsl_model.sudo().search(
                     [('unique_import_id', '=', unique_id)], limit=1)):
+                if line_vals.get('currency_code'):
+                    line_vals['currency_id'] = self._find_currency_id(line_vals.get('currency_code'))
                 filtered_st_lines.append(line_vals)
             else:
                 ignored_line_ids.append(unique_id)
