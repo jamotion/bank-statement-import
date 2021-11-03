@@ -116,7 +116,12 @@ class CamtParser(models.AbstractModel):
                 './ns:RmtInf/ns:Strd/ns:CdtrRefInf/ns:Ref',
             ],
             transaction, 'name')
-        amount, ccy = self.parse_amount(node, with_ccy=True)
+
+        # START: Do not use foreign currencies (special wish of NEESR)
+        # amount, ccy = self.parse_amount(node, with_ccy=True)
+        amount = self.parse_amount(node)
+        # END: Do not use foreign currencies (special wish of NEESR)
+
         if amount != 0.0 and amount != transaction['amount']:
             if ccy:
                 transaction['amount_currency'] = amount
