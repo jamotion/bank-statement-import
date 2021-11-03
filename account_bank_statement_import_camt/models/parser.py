@@ -240,9 +240,9 @@ class CamtParser(models.AbstractModel):
         """
         balance = 0
         nodes = (
-            self.get_balance_type_node(node, 'CLAV') or
             self.get_balance_type_node(node, 'CLBD') or
-            self.get_balance_type_node(node, 'ITBD')
+            self.get_balance_type_node(node, 'ITBD') or
+            self.get_balance_type_node(node, 'CLAV')
         )
         if nodes:
             balance = self.parse_amount(nodes[-1])
