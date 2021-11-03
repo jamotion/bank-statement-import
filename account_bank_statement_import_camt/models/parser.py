@@ -117,17 +117,20 @@ class CamtParser(models.AbstractModel):
             ],
             transaction, 'name')
 
-        # START: Do not use foreign currencies (special wish of NEESR)
+        # START: Do not use foreign currencies (special wish of NEESER)
         # amount, ccy = self.parse_amount(node, with_ccy=True)
-        amount = self.parse_amount(node)
-        # END: Do not use foreign currencies (special wish of NEESR)
+        # if amount != 0.0 and amount != transaction['amount']:
+        #     if ccy:
+        #         transaction['amount_currency'] = amount
+        #         transaction['currency_code'] = ccy
+        #     else:
+        #         transaction['amount'] = amount
 
+        amount = self.parse_amount(node)
         if amount != 0.0 and amount != transaction['amount']:
-            if ccy:
-                transaction['amount_currency'] = amount
-                transaction['currency_code'] = ccy
-            else:
-                transaction['amount'] = amount
+            transaction['amount'] = amount
+        # END: Do not use foreign currencies (special wish of NEESER)
+
 
         # remote party values
         party_type = 'Dbtr'
