@@ -103,7 +103,7 @@ class CamtParser(models.AbstractModel):
                 './ns:RltdPties/ns:DbtrAcct/ns:Tp/ns:Prtry',
             ],
             transaction,
-            'message',
+            'eref',
             join_str='\n')
         # eref
         self.add_value_from_node(
@@ -204,6 +204,8 @@ class CamtParser(models.AbstractModel):
         for i, dnode in enumerate(detail_nodes):
             transaction = copy(transaction_base)
             self.parse_transaction_details(dnode, transaction)
+            if hasattr(transaction, 'message_detail'):
+                transaction.message += ' ' + transaction.message_detail
             self.default_transaction_data(node, transaction)
             transaction.data = etree.tostring(dnode)
             yield transaction
