@@ -78,18 +78,23 @@ class CamtParser(models.AbstractModel):
         in a found node will be used to set a value."""
         if not isinstance(xpath_str, (list, tuple)):
             xpath_str = [xpath_str]
+
+        attr_values = []
         for search_str in xpath_str:
             found_node = self.xpath(node, search_str)
             if found_node:
                 if join_str is None:
                     attr_value = found_node[0].text
+                    setattr(obj, attr_name, attr_value)
+                    break
                 else:
-                    attr_value = join_str.join([x.text for x in found_node])
-                setattr(obj, attr_name, attr_value)
-                break
+                    attr_values += [x.text for x in found_node]
         else:
             if default:
                 setattr(obj, attr_name, default)
+        if attr_values:
+            attr_value = join_str.join(attr_values)
+            setattr(obj, attr_name, attr_value)
 
     def parse_transaction_details(self, node, transaction):
         """Parse transaction details (message, party, account...)."""
