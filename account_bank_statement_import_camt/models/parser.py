@@ -108,7 +108,7 @@ class CamtParser(models.AbstractModel):
                 './ns:RltdPties/ns:DbtrAcct/ns:Tp/ns:Prtry',
             ],
             transaction,
-            'eref',
+            'message',
             join_str='\n')
         # eref
         self.add_value_from_node(
@@ -198,7 +198,7 @@ class CamtParser(models.AbstractModel):
         self.add_value_from_node(
             node, './ns:AddtlNtryInf', transaction, 'name')
         self.add_value_from_node(
-            node, './ns:AddtlNtryInf', transaction, 'message')
+            node, './ns:AddtlNtryInf', transaction, 'eref')
         detail_nodes = self.xpath(node, './ns:NtryDtls/ns:TxDtls')
         if len(detail_nodes) == 0:
             self.default_transaction_data(node, transaction)
