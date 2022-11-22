@@ -352,21 +352,20 @@ class AccountBankStatementImport(models.TransientModel):
                 partner_id = False
                 bank_account_id = False
                 partner_account_number = line_vals.get('account_number')
-                if partner_account_number:
-                    bank_model = self.env['res.partner.bank']
-                    banks = bank_model.search(
-                        [('acc_number', '=', partner_account_number)], limit=1)
-                    if banks:
-                        bank_account_id = banks[0].id
-                        partner_id = banks[0].partner_id.id
-                    else:
-                        bank_obj = self._create_bank_account(
-                            partner_account_number)
-                        bank_account_id = bank_obj and bank_obj.id or False
-                if not partner_id and len(line_vals['name']) == 27 and line_vals['name'].isdigit():
+                if len(line_vals['name']) == 27 and line_vals['name'].isdigit():
                     invoices = self.env['account.invoice'].search([('l10n_ch_qrr', '=', line_vals['name'])])
                     if len(invoices) == 1:
                         partner_id = invoices.partner_id.id
+                if partner_account_number:
+                    bank_model = self.env['res.partner.bank']
+                    banks = bank_model.search([('acc_number', '=', partner_account_number)], limit=1)
+                    if banks:
+                        bank_account_id = banks[0].id
+                        partner_id = partner_id if partner_id else banks[0].partner_id.id
+                    else:
+                        bank_obj = self._create_bank_account(partner_account_number)
+                        bank_account_id = bank_obj and bank_obj.id or False
+
                 line_vals['partner_id'] = partner_id
                 line_vals['bank_account_id'] = bank_account_id
         if 'date' in stmt_vals and 'period_id' not in stmt_vals:
