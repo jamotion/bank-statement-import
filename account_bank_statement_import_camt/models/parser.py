@@ -88,7 +88,7 @@ class CamtParser(models.AbstractModel):
                     setattr(obj, attr_name, attr_value)
                     break
                 else:
-                    attr_values += [x.text for x in found_node]
+                    attr_values += [x.text for x in found_node if x.text not in ['NOTPROVIDED', '?REJECT?000', '?ERROR?000']]
         else:
             if default:
                 setattr(obj, attr_name, default)
@@ -102,6 +102,7 @@ class CamtParser(models.AbstractModel):
         self.add_value_from_node(
             node, [
                 './ns:RmtInf/ns:Ustrd',
+                './ns:RmtInf/ns:Strd/ns:CdtrRefInf/ns:Ref|./ns:RmtInf/ns:Strd/ns:AddtlRmtInf',
                 './ns:AddtlTxInf',
                 './ns:AddtlNtryInf',
                 './ns:RltdPties/ns:CdtrAcct/ns:Tp/ns:Prtry',
@@ -113,9 +114,10 @@ class CamtParser(models.AbstractModel):
         # eref
         self.add_value_from_node(
             node, [
+                './ns:RmtInf/ns:Strd/ns:AddtlRmtInf',
                 './ns:Refs/ns:EndToEndId',
             ],
-            transaction, 'eref')
+            transaction, 'eref', join_str=', ')
         self.add_value_from_node(
             node, [
                 './ns:RmtInf/ns:Strd/ns:CdtrRefInf/ns:Ref',
